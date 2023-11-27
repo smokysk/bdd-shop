@@ -10,20 +10,20 @@
     </mat-card-header>
 
     <mat-card-content>
-      <form>
-        <mat-form-field class="full-width">
-          <input matInput placeholder="Email" type="email" required>
+      <form [formGroup]="formGroup!">
+        <mat-form-field fxFlex>
+          <input matInput type="text" maxlength="64" formControlName="username" required autoFocus>
         </mat-form-field>
 
-        <mat-form-field class="full-width">
-          <input matInput placeholder="Password" type="password" required>
+        <mat-form-field fxFlex>
+          <input matInput
+                 formControlName="password"
+                 minlength="4"
+                 maxlength="64"
+                 required>
         </mat-form-field>
-
-        <div class="button-container">
-          <button mat-raised-button color="primary" type="submit">Entrar</button>
-          <button mat-raised-button type="button" color="warn">Cancelar</button>
-        </div>
       </form>
     </mat-card-content>
+    <button type="button" (click)="login()">Login</button>
   </mat-card>
 </div>

@@ -10,26 +10,33 @@ import {MatButtonModule} from "@angular/material/button";
 import {AuthService} from "./services/auth.service";
 import {HttpClientModule} from "@angular/common/http";
 import {AppVariables} from "./app.variables";
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {ReactiveFormsModule} from "@angular/forms";
+import {ProductsComponent} from "./components/products/products/products.component";
+import {AppGuard} from "./app.guard";
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        LoginComponent
-    ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        MatInputModule,
-        MatButtonModule,
-        MatCardModule,
-        HttpClientModule
-    ],
-    providers: [
-        provideClientHydration(),
-        AuthService,
-        AppVariables
-    ],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    LoginComponent,
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+    HttpClientModule,
+    NoopAnimationsModule,
+    ReactiveFormsModule
+  ],
+  providers: [
+    provideClientHydration(),
+    AuthService,
+    AppVariables,
+    AppGuard
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }
