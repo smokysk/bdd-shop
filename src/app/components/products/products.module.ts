@@ -6,6 +6,7 @@ import {RouterModule} from "@angular/router";
 import {MatCardModule} from "@angular/material/card";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {ProductServiceService} from "./product-service.service";
 
 
 @NgModule({
@@ -18,6 +19,9 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     MatCardModule,
     MatTableModule,
     MatPaginatorModule,
+  ],
+  providers: [
+    ProductServiceService
   ]
 })
 export class ProductsModule {
