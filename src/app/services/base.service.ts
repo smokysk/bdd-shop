@@ -22,7 +22,8 @@ export class BaseService<T> {
 
     public clearParameter(): void {
         this.parameters = new HttpParams();
-        this.token = null;
+        // @ts-ignore
+      this.token = null;
     }
 
     public addParameter(key: string, value: any): void {
@@ -39,7 +40,7 @@ export class BaseService<T> {
 
     private getOptions(responseType?: any): any {
         const token = this.token ? this.token : localStorage.getItem("token");
-        const httpOptions = {};
+        const httpOptions: any = {};
 
         if (token) {
             httpOptions["headers"] = new HttpHeaders({"Authorization": "Bearer ".concat(token)});
@@ -55,7 +56,8 @@ export class BaseService<T> {
 
     public getAll(route?: string): Observable<T[]> {
         const url = route ? `${this.fullUrl}${route}/` : `${this.fullUrl}`;
-        return this.http.get<T[]>(url, this.getOptions())
+        // @ts-ignore
+      return this.http.get<T[]>(url, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<T[]>),
                 catchError(ex => from([]))
@@ -64,7 +66,8 @@ export class BaseService<T> {
 
     public getAllFromAnotherRoute(route?: string): Observable<T[]> {
         const url = route ? `${this.urlBase}${route}` : `${this.fullUrl}`;
-        return this.http.get<T[]>(url, this.getOptions())
+        // @ts-ignore
+      return this.http.get<T[]>(url, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<T[]>),
                 catchError(ex => from([]))
@@ -77,7 +80,8 @@ export class BaseService<T> {
 
     public getFromDetailRoute<K>(id: number, route: string): Observable<K> {
         const url = `${this.fullUrl}${id}/${route}/`;
-        return this.http.get<K>(url, this.getOptions())
+        // @ts-ignore
+      return this.http.get<K>(url, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<K>),
                 catchError(ex => from([]))
@@ -86,7 +90,8 @@ export class BaseService<T> {
 
     public getFromListRoute<K>(route: string): Observable<K> {
         const url = `${this.fullUrl}${route}/`;
-        return this.http.get<K>(url, this.getOptions())
+        // @ts-ignore
+      return this.http.get<K>(url, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<K>),
                 catchError(ex => from([]))
@@ -95,7 +100,8 @@ export class BaseService<T> {
 
     public postFromDetailRoute<E, K>(id: number, route: string, entity: E): Observable<K> {
         const url = `${this.fullUrl}${id}/${route}/`;
-        return this.http.post<K>(url, entity, this.getOptions())
+        // @ts-ignore
+      return this.http.post<K>(url, entity, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<K>),
                 catchError(ex => from([]))
@@ -104,7 +110,8 @@ export class BaseService<T> {
 
     public postFromListRoute<E, K>(route: string, entity: E): Observable<K> {
         const url = `${this.fullUrl}${route}/`;
-        return this.http.post<K>(url, entity, this.getOptions())
+        // @ts-ignore
+      return this.http.post<K>(url, entity, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<K>),
                 catchError(ex => from([]))
@@ -115,7 +122,7 @@ export class BaseService<T> {
         const url = `${this.fullUrl}${route}/`;
 
         const token = this.token ? this.token : localStorage.getItem("token");
-        const httpOptions = {};
+        const httpOptions: any = {};
         if (token){
             httpOptions["headers"] = new HttpHeaders({"Authorization": "Bearer ".concat(token)});
         }
@@ -123,7 +130,8 @@ export class BaseService<T> {
             httpOptions["body"] = model;
         }
 
-        return this.http.delete<K>(url, httpOptions)
+        // @ts-ignore
+      return this.http.delete<K>(url, httpOptions)
             .pipe(
                 tap(response => response as unknown as HttpUserEvent<K>),
                 catchError(ex => from([]))
@@ -132,7 +140,8 @@ export class BaseService<T> {
 
     public patchFromDetailRoute<E, K>(id: number, route: string, entity: E): Observable<K> {
         const url = `${this.fullUrl}${id}/${route}/`;
-        return this.http.patch<K>(url, entity, this.getOptions())
+        // @ts-ignore
+      return this.http.patch<K>(url, entity, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<K>),
                 catchError(ex => from([]))
@@ -141,7 +150,8 @@ export class BaseService<T> {
 
     public patchFromListRoute<E, K>(route: string, entity: E): Observable<K> {
         const url = `${this.fullUrl}${route}/`;
-        return this.http.patch<K>(url, entity, this.getOptions())
+        // @ts-ignore
+      return this.http.patch<K>(url, entity, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<K>),
                 catchError(ex => from([]))
@@ -150,7 +160,8 @@ export class BaseService<T> {
 
     public save(entity: T): Observable<T> {
         this.clearParameter();
-        return this.http.post<T>(this.fullUrl, entity, this.getOptions())
+        // @ts-ignore
+      return this.http.post<T>(this.fullUrl, entity, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<T>),
                 catchError(ex => from([]))
@@ -159,7 +170,8 @@ export class BaseService<T> {
 
     public getById(id: number | string, route?: string): Observable<T> {
         const url = route ? `${this.fullUrl}${id}/${route}/` : `${this.fullUrl}${id}/`;
-        return this.http.get<T>(url, this.getOptions())
+        // @ts-ignore
+      return this.http.get<T>(url, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<T>),
                 catchError(ex => from([]))
@@ -190,7 +202,7 @@ export class BaseService<T> {
         return this.http.options<T>(this.fullUrl, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<any>),
-                map(response => response["actions"]["POST"]),
+                map((response: any) => response["actions"]["POST"]),
                 catchError(ex => from([]))
             );
     }
@@ -199,7 +211,7 @@ export class BaseService<T> {
         return this.http.options<any>(this.fullUrl, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<any>),
-                map(response => response["actions"]["POST"][field]["choices"]),
+                map((response: any) => response["actions"]["POST"][field]["choices"]),
                 catchError(ex => from([]))
             );
     }
@@ -213,7 +225,8 @@ export class BaseService<T> {
     }
 
     public loadUrl(url: string): Observable<T> {
-        return this.http.get<T>(url, this.getOptions())
+        // @ts-ignore
+      return this.http.get<T>(url, this.getOptions())
             .pipe(
                 tap(response => response as HttpUserEvent<T>),
                 catchError(ex => from([]))
@@ -222,7 +235,8 @@ export class BaseService<T> {
 
     public loadFile(route: string, data: any): Observable<Blob> {
         const url = `${this.fullUrl}${route}/`;
-        return this.http.post<Blob>(url, data, this.getOptions("blob"))
+        // @ts-ignore
+      return this.http.post<Blob>(url, data, this.getOptions("blob"))
             .pipe(
                 tap(response => response),
                 catchError(ex => from([]))
@@ -231,7 +245,8 @@ export class BaseService<T> {
 
     public getFileFromListRoute<K>(route: string): Observable<Blob> {
         const url = `${this.fullUrl}${route}/`;
-        return this.http.get<Blob>(url, this.getOptions("blob"))
+        // @ts-ignore
+      return this.http.get<Blob>(url, this.getOptions("blob"))
             .pipe(
                 tap(response => response),
                 catchError(ex => from([]))

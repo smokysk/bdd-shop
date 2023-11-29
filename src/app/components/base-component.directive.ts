@@ -56,12 +56,12 @@ const handler = (event: number, callback?: (event: number) => void) => {
 @Directive()
 export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
 
-  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
+  @ViewChild(MatTabGroup) tabGroup?: MatTabGroup;
 
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: true}) paginator?: MatPaginator;
 
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, {static: true}) sort?: MatSort;
 
 
   public dialog: MatDialog;
@@ -71,10 +71,13 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
   public service: BaseService<T>;
   public dataSource: MatTableDataSource<T>;
   public formBuilder: FormBuilder;
+  // @ts-ignore
   public formGroup: FormGroup;
 
-  public object: T | {};
-  public rawObject: T | {};
+  // @ts-ignore
+  public object?: any;
+  // @ts-ignore
+  public rawObject: any;
   public pk: string;
 
   public unsubscribe = new Subject();
@@ -114,6 +117,7 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
     }
   }
 
+  // @ts-ignore
   public ngOnDestroy(value: T) {
     this.unsubscribe.next(value);
     this.unsubscribe.complete();
@@ -195,7 +199,7 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
   public retrieve(callback?: () => void): void {
     // Add parameters to filter retrieve
     if (this.options.paramsOnInit) {
-      const parameters = this.options.paramsOnInit;
+      const parameters: any = this.options.paramsOnInit;
       Object.keys(parameters).forEach(t => this.service.addParameter(t, parameters[t]));
     }
     // Retrieve object
@@ -209,6 +213,7 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
         return false;
       }),
       switchMap(id => {
+        // @ts-ignore
         this.object[this.pk] = id;
         return this.service.getById(id, this.options.retrieveRoute);
       })
@@ -271,7 +276,8 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
 
   private _isAllAssociated(): void {
     const data = this.dataSource.data;
-    const filter = data.filter(t => t["associated"]);
+    const filter = data.filter((t: any) => t["associated"]);
+    // @ts-ignore
     this.dataSource["allAssociated"] = data.length > 0 && data.length === filter.length;
   }
 
@@ -280,8 +286,8 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
 
   // Convenient for reorder table
   public reorder(event: CdkDragDrop<string[]>, callback?: (event: number) => void) {
-    const item = this.dataSource.data[event.currentIndex];
-    const itemMove = this.dataSource.data[event.previousIndex];
+    const item: any = this.dataSource.data[event.currentIndex];
+    const itemMove: any = this.dataSource.data[event.previousIndex];
     this.service.clearParameter();
     this.service.patchFromDetailRoute(item[this.pk], "reorder", {"item_move": itemMove["url"]})
       .pipe(takeUntil(this.unsubscribe))
@@ -298,7 +304,7 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
   private _saveOrUpdate(isFormData: boolean, isPlus: boolean, callback?: (event: number) => void, skippCreateMode?: boolean): void {
 
     // Get data to save or update
-    let data;
+    let data: any;
     if (isFormData) {
       data = new FormData();
       Object.keys(this.rv).forEach(key => {
@@ -306,12 +312,15 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
         data.append(key, value === null || value === undefined ? "" : value);
       });
     } else {
+      // @ts-ignore
       Object.assign(this.object, this.rv);
       data = this.object;
     }
 
     // Save or update according ID
+    // @ts-ignore
     if (this.object[this.pk]) {
+      // @ts-ignore
       this.service.update(this.object[this.pk], data)
         .pipe(take(1))
         .subscribe(response => {
@@ -364,7 +373,7 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
 
   // Keep filters on search
   private _keepActiveFilters(): void {
-    const queryParams = {};
+    const queryParams: any = {};
     Object.keys(this.v).forEach(t => queryParams[t] = this.v[t] ? this.v[t] : "");
     // queryParams["p"] = this.paginator.pageIndex;
 
@@ -380,6 +389,7 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
         .subscribe(params => {
           Object.keys(params).forEach(t => {
             if (t === "p") {
+              // @ts-ignore
               this.paginator.pageIndex = params[t];
             } else if (this.f[t]) {
               this.f[t].patchValue(params[t]);
@@ -407,6 +417,7 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
 
       if (this.sort) {
         // If the user changes the sort order, reset back to the first page.
+        // @ts-ignore
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
         merge(this.sort.sortChange, this.paginator.page)
@@ -422,16 +433,18 @@ export abstract class BaseComponentDirective<T> implements OnInit, OnDestroy {
 
   private _changeToCreateMode() {
     const route = this._getPathRoute(this.router.routerState.snapshot.root)
-      .map(path => path.replace(":action", "create"));
+      .map((path: any) => path.replace(":action", "create"));
     this.router.navigate([route.join("/")], {queryParamsHandling: "preserve"}).then();
   }
 
   private _changeToUpdateMode() {
+    // @ts-ignore
     const route = this._getPathRoute(this.router.routerState.snapshot.root)
-      .map(path => path.replace(":action", this.object[this.pk]));
+      .map((path: any) => path.replace(":action", this.object[this.pk]));
     this.router.navigate([route.join("/")], {queryParamsHandling: "preserve"}).then();
   }
 
+  // @ts-ignore
   private _getPathRoute(route: ActivatedRouteSnapshot) {
     let array = [];
     if (route.routeConfig && route.routeConfig.path !== "") {
